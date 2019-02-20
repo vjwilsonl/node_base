@@ -22,9 +22,6 @@ app.use(passport.session());
 
 require('./routes/authRoutes')(app);
 
-//client id
-//secret
-
 const PORT = process.env.PORT || 5000;
 
 app.listen(5000);

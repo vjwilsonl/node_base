@@ -4,6 +4,9 @@ const mongoose = require('mongoose');
 const User = mongoose.model('users');
 
 module.exports = app => {
+  app.get('/', (req, res) => {
+    res.send(req.user);
+  });
   // google authentication
   app.get(
     '/api/auth/google',

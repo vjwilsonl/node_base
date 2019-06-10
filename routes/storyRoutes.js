@@ -56,7 +56,7 @@ module.exports = app => {
             title,
             description,
             imageUrl: data.Location,
-            _user: '5c7f539b7c34db3024c6795b'
+            _user: 'req.user.id'
           });
           try {
             await vrx.save();

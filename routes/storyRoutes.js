@@ -87,12 +87,13 @@ module.exports = app => {
           // error in upload
           res.send('Error', err);
         } else if (data) {
-          fs.unlink(filePath);
+          console.log(filePath);
+          fs.unlinkSync(filePath);
           var story = await new Story({
             title,
             description,
             imageUrl: data.Location,
-            _user: '5c7f539b7c34db3024c6795b'
+            _user: req.user.id || '5c7f539b7c34db3024c6795b'
           }).save();
           //respond with newest copy of story created
           res.send(story);

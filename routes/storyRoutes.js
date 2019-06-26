@@ -88,12 +88,17 @@ module.exports = app => {
           res.send('Error', err);
         } else if (data) {
           console.log(filePath);
+          //temp fix
+          var uid =
+            typeof req.user !== 'undefined'
+              ? req.user.id
+              : '5c7f539b7c34db3024c6795b';
           fs.unlinkSync(filePath);
           var story = await new Story({
             title,
             description,
             imageUrl: data.Location,
-            _user: req.user.id || '5c7f539b7c34db3024c6795b'
+            _user: uid
           }).save();
           //respond with newest copy of story created
           res.send(story);

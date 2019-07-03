@@ -140,14 +140,66 @@ module.exports = app => {
    * POST /api/story/:id
    * UPDATE story details
    */
-  app.post('/api/story/:id', async (req, res) => {
+  app.post('/api/story/:id', upload.single('vrfile'), async (req, res) => {
     if (mongoose.Types.ObjectId.isValid(req.params.id)) {
-      try {
-        var story = await Story.findById(req.params.id);
-      } catch (err) {
-        res.status(422).send(err);
+      // TODO check if story belong to user
+      var { title, description } = req.body;
+      var update = { title: title, description: description };
+      var option = { new: true }; // return newest copy
+      // check if new file uploaded
+      if (req.file) {
+        const filePath = process.cwd() + '/' + req.file.path;
+        const params = uploadFileParams(filePath);
+        var fileData = '';
+        var s3 = new AWS.S3();
+        //begin upload
+        await s3.upload(params, async (err, data) => {
+          if (err) {
+            // error in upload
+            res.send('Error', err);
+          } else if (data) {
+            //temp fix
+            var uid =
+              typeof req.user !== 'undefined'
+                ? req.user.id
+                : '5c7f539b7c34db3024c6795b';
+            fs.unlinkSync(filePath);
+            update.imageUrl = data.Location;
+            try {
+              var story = await Story.findByIdAndUpdate(
+                req.params.id,
+                update,
+                option
+              );
+            } catch (err) {
+              res.status(422).send(err);
+            }
+
+            if (story) {
+              res.send(story);
+            } else {
+              res.status(204).send(story);
+            }
+          }
+        });
+      } else {
+        // update new datas
+        try {
+          var story = await Story.findByIdAndUpdate(
+            req.params.id,
+            update,
+            option
+          );
+        } catch (err) {
+          res.status(422).send(err);
+        }
+
+        if (story) {
+          res.send(story);
+        } else {
+          res.status(204).send(story);
+        }
       }
-      res.send(story);
     } else {
       res.send('Invalid story ID');
     }

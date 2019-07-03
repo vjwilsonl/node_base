@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const cookieSession = require('cookie-session');
 const passport = require('passport');
 const keys = require('./config/keys');
+const bodyParser = require('body-parser');
 require('./models/User.js');
 require('./models/Story.js');
 require('./services/passport');
@@ -20,6 +21,7 @@ app.use(
 
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 require('./routes/authRoutes')(app);
 require('./routes/storyRoutes')(app);

@@ -7,14 +7,15 @@ module.exports = app => {
   app.get('/', (req, res) => {
     res.send(req.user);
   });
-  // google authentication
+  /**
+   * Google authentication
+   */
   app.get(
     '/api/auth/google',
     passport.authenticate('google', {
       scope: ['profile', 'email']
     })
   );
-
   // callback after google authentication
   app.get(
     '/api/auth/google/callback',
@@ -22,6 +23,25 @@ module.exports = app => {
     (req, res) => {
       res.redirect('/');
     }
+  );
+
+  /**
+   * Facebook authentication
+   */
+  //TODO need to get email permission
+  app.get(
+    '/api/auth/facebook',
+    passport.authenticate('facebook', {
+      scope: ['email']
+    })
+  );
+
+  app.get(
+    '/api/auth/facebook/callback',
+    passport.authenticate('facebook', {
+      successRedirect: '/',
+      failureRedirect: '/login'
+    })
   );
 
   app.get('/api/current_user', (req, res) => {

@@ -35,19 +35,19 @@ module.exports = app => {
       scope: ['email']
     })
   );
-  app.get(
-    '/api/auth/facebook/callback',
-    passport.authenticate('facebook', (req, res) => {
-      res.redirect('/');
-    })
-  );
   // app.get(
   //   '/api/auth/facebook/callback',
-  //   passport.authenticate('facebook', {
-  //     successRedirect: '/',
-  //     failureRedirect: '/login'
+  //   passport.authenticate('facebook', (req, res) => {
+  //     res.redirect('/');
   //   })
   // );
+  app.get(
+    '/api/auth/facebook/callback',
+    passport.authenticate('facebook', {
+      successRedirect: '/',
+      failureRedirect: '/login'
+    })
+  );
 
   app.get('/api/current_user', (req, res) => {
     res.send(req.user);

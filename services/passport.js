@@ -50,7 +50,14 @@ passport.use(
       clientID: keys.facebookClientID,
       clientSecret: keys.facebookClientSecret,
       callbackURL: 'https://dev360.tusi.sg/api/auth/facebook/callback',
-      proxy: true
+      proxy: true,
+      profileFields: [
+        'email',
+        'picture',
+        'first_name',
+        'last_name',
+        'middle_name'
+      ]
     },
     async (accessToken, refreshToken, profile, done) => {
       const existingUser = await User.findOne({ googleId: profile.id });
@@ -60,7 +67,7 @@ passport.use(
       } else {
         const user = await new User({
           googleId: profile.id,
-          name: profile.displayName + ' ' + profile.name.familyName,
+          name: profile.name.givenName,
           email: profile.emails[0].value,
           avatarURI: profile.photos[0].value
         }).save();

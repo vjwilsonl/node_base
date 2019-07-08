@@ -43,10 +43,16 @@ module.exports = app => {
   // );
   app.get(
     '/api/auth/facebook/callback',
-    passport.authenticate('facebook', {
-      successRedirect: '/',
-      failureRedirect: '/login'
-    })
+    passport.authenticate(
+      'facebook',
+      {
+        successRedirect: '/',
+        failureRedirect: '/login'
+      },
+      function(req, res) {
+        res.redirect('/');
+      }
+    )
   );
 
   app.get('/api/current_user', (req, res) => {

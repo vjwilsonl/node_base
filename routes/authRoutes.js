@@ -32,7 +32,7 @@ module.exports = app => {
   app.get(
     '/api/auth/facebook',
     passport.authenticate('facebook', {
-      scope: ['picture,email']
+      scope: ['email']
     })
   );
   // app.get(
